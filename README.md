@@ -34,14 +34,14 @@ We need to be able to give the $scope some data looking this this (classic digge
 
 ```json
 {
-	name:'Folder',
-	_digger:{
-		diggerid:123
+	"name":"Folder",
+	"_digger":{
+		"diggerid":"123"
 	},
-	_children:[{
-		name:'Child 1',
-		_digger:{
-			diggerid:456
+	"_children":[{
+		"name":"Child 1",
+		"_digger":{
+			"diggerid":"456"
 		}
 	}]
 }
@@ -49,6 +49,14 @@ We need to be able to give the $scope some data looking this this (classic digge
 ```
 
 So - each 'container' has a name, id and _children.
+
+It is best to mock up the whole thing using dummy raw data.
+
+The less dependencies the better.
+
+We might come out of this with a useful windows explorer for EVERYONE not just digger databases.
+
+Point is - work with the data structure above and that makes it a sinch to diggerize from above : )
 
 ### Components
 Using this we can make a tree - a content view and a title bar with breadcrumbs.
