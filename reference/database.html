@@ -1,0 +1,545 @@
+<div class="container">
+	<div class="row" ng-hide="access">
+		<div class="span12">
+			<span ng-show="accessloaded">
+				this database has been set to private...
+			</span>
+			<span ng-hide="accessloaded">
+				loading database...
+			</span>
+		</div>
+	</div>
+	<div ng-show="access">
+		<div class="row">
+
+			<!--
+				TOP DB LINKS
+			 -->
+			<div class="span3">
+				<h4>
+					<a href="/{{ viewuser.attr('username') }}">{{ viewuser.attr('username') }}</a> / 
+					<a href="/{{ viewuser.attr('username') }}/{{ database_name }}">{{ database_name }}</a>
+				</h4>
+			</div>
+
+			<!--
+				TOP SEARCH BARS
+			 -->
+			<div class="span9">
+				<div class="row-fluid">
+					<div class="span1" style="padding-top:10px;">
+						<span class="greyswatch">$digger:</span>
+					</div>
+					<div class="span3">
+						<input type="text" class="searchinput" class="input input-small" ng-model="selector" />
+					</div>
+					
+					<div class="span1" style="padding-top:10px;">
+						<span class="greyswatch">context:</span> 
+					</div>
+					<div class="span4">
+						<input type="text" class="searchinput" class="input input-small" ng-model="context" />
+					</div>					
+
+					<div class="span1" style="padding-top:10px;">
+						<small><a href="#" ng-click="reset_selectors()">reset</a></small>
+					</div>
+
+					<div class="span1" style="padding-top:10px;">
+						<span class="btn-group btn-dropdown-menu">
+			        <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+			          developer
+			          <span class="caret"></span>
+			        </a>
+			          <!--
+			          this means a sub-menu
+			         -->
+			        <ul class="dropdown-menu">
+			        	<li>
+			        		<a href="#" ng-click="seecode('html')"><small>HTML</small></a>
+			        	</li>
+			        	<li>
+			        		<a href="#" ng-click="seecode('js')"><small>JS</small></a>
+			        	</li>
+			        	<li>
+			        		<a href="#" ng-click="seecode('rest')"><small>REST</small></a>
+			        	</li>
+			        </ul>
+			    	</span>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<hr style="margin:8px;" />
+
+		<div class="row-fluid" ng-show="showingcode">
+			<div ng-show="codetype=='html'">
+				<div class="span3">
+					<small>
+						copy this HTML onto your webpage - it shows an example of loading the data below using the digger HTML api - <a href="#" ng-click="showingcode=false">hide</a>
+					</small>
+				</div>
+				<div class="span9">
+					<div class="well">
+	                	
+            	<pre pretty-print class="lang-html" code="{{ get_code('html') }}" ng-bind="code">
+
+            	</pre>
+   	
+
+					</div>
+				</div>
+			</div>
+			<div ng-show="codetype=='js'">
+				<div class="span3">
+					<small>
+						copy this HTML onto your webpage - it shows an example of loading the data below using the digger JavaScript api - <a href="#" ng-click="showingcode=false">hide</a>
+					</small>
+				</div>
+				<div class="span9">
+					<div class="well">
+						<pre pretty-print class="lang-js" code="{{ get_code('js') }}" ng-bind="code">
+
+            	</pre>
+   	
+					</div>
+				</div>
+			</div>
+			<div ng-show="codetype=='rest'">
+				<div class="span3">
+					<small>
+						issue the following HTTP request using your favorite REST client - it will load the data you see on this page - <a href="#" ng-click="showingcode=false">hide</a>
+					</small>
+				</div>
+				<div class="span9">
+					<div class="well">
+							<pre pretty-print class="lang-bash" code="{{ get_code('rest') }}" ng-bind="code">
+
+            	</pre>
+   	
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<hr style="margin:8px;" ng-show="showingcode" />
+		<div class="row">
+
+			<!--
+				TREE
+			 -->
+	    <div class="span3">
+	    	<digger-radio for="warehouse">
+	    		<digger-tree icon="treeicon(container);" selector="selector" selected="container" root="warehouse" treetitle="{{ database_name }}" />
+	    	</digger-radio>
+	    	
+			</div>
+
+			<!--
+				EDITOR
+			 -->
+			<div class="span9">
+			
+				
+				<div class="row-fluid">
+
+
+
+			    <!--
+			    	INFO PANEL
+			     -->
+			    <div class="span3" ng-hide="editmode">
+			    	<div ng-hide="activeselection.length>0">
+
+			    		<!--
+			    			title row
+			    		 -->
+				    	<div class="row-fluid">
+								<div class="span3">
+									<i class="digger-icon {{treeicon(container)}}" style="color:#f5f5f5;font-size:3em;"></i>
+								</div>
+								<div class="span8">
+							  	<h5>{{ container.title() }}</h5>
+							  </div>
+							</div>
+							<!--
+								info row
+							 -->
+							<div class="row-fluid">
+								<div class="span10" style="padding:5px;font-size:0.8em;">
+									<div class="well littlewell" ng-show="container.tag()!='_supplychain'">
+										<small style="font-size:0.85em;color:#999">({{ container.summary({title:false}) }})</small>
+									</div>
+								</div>
+								<div class="span12">
+									<span ng-show="container.tag()!='_supplychain' && !editmode">
+										<button class="btn btn-info btn-mini" ng-click="edit_container(container)">edit</button><br />
+									</span>
+									<span ng-show="clipboard_container.count()>0">
+										<button class="btn btn-mini" ng-click="paste_selection()" style="margin-top:5px;">paste</button><br />
+									</span>
+								</div>
+							</div>
+						</div>
+						<div ng-show="activeselection.length>0">
+
+							<h5>selected</h5>
+							
+
+							<div class="well littlewell">
+
+
+								<!--
+									loop selection
+								 -->
+								<div ng-repeat="selected in activeselection">
+									<i class="digger-icon {{treeicon(selected)}}" style="font-size:1.3em;"></i>
+									<a href="#" ng-click="open_container(selected);">
+										<small>{{ selected.title() }}</small>
+									</a><br />
+									<small style="font-size:0.65em;color:#999;">{{ selected.summary({title:false}) }}</small><br />
+									<small style="font-size:0.65em;color:#999;">{{ attr_summary(selected) }}</small>
+									
+									
+								</div>
+								<div style="text-align:right;font-size:.85em;">
+									<small><a href="#" ng-click="clear_selection()">select none</a></small>
+								</div>
+							</div>
+
+							<!--
+								selection buttons
+							 -->
+
+							<div class="row-fluid">
+								<div class="span12">
+
+										
+										<span ng-show="activeselection.length==1">
+											<button class="selected-btn btn btn-info btn-mini" ng-click="edit_container(activeselection[0])" ><span ng-show="readonly">view</span><span ng-hide="readonly">edit</span></button>
+										<button class="selected-btn btn btn-info btn-mini" ng-click="open_container(activeselection[0])" >open</button>
+											<br />
+										</span>
+										
+										<span ng-hide="readonly">
+											<button class="selected-btn btn btn-mini" ng-click="delete_selection()">delete</button>
+
+											<button class="selected-btn btn btn-mini" ng-click="cut_selection()">cut</button>
+
+											<button class="selected-btn btn btn-mini" ng-click="copy_selection()">copy</button> <br />
+
+
+										
+
+											<div ng-show="confirmmode" class="well littlewell" style="margin-top:10px;">
+												<strong><small>
+												Are you sure?<br />
+												</small></strong>
+												<button class="selected-btn btn btn-mini" ng-click="confirmmode=false">cancel</button>
+												<button class="selected-btn btn btn-danger btn-mini" ng-click="doconfirm()">yes - do it!</button>
+											</div>
+
+										</span>
+
+								</div>
+							</div>
+						</div>
+			    </div>
+
+
+
+
+			    <!--
+			    	VIEW PANEL
+			     -->
+
+					<div class="span9" ng-hide="editmode">
+
+
+						<!--
+							Add menu
+						 -->
+						<div class="row-fluid" ng-hide="readonly">
+							<div class="span4">
+					    	<span class="btn-group btn-dropdown-menu" ng-hide="manualcontext">
+					        <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+					          add
+					          <span class="caret"></span>
+					        </a>
+					          <!--
+					          this means a sub-menu
+					         -->
+					        <ul class="dropdown-menu">
+					        	<li>
+					        		<a href="#" ng-click="addcontainer('folder')"><small>Folder</small></a>
+					        	</li>
+					        	<li>
+					        		<a href="#" ng-click="addcontainer('item')"><small>Item</small></a>
+					        	</li>
+					        	<li class="divider" ng-show="blueprints.count()>0"></li>
+					          <li ng-repeat="blueprint in blueprints.containers()">
+					            <a href="#" ng-click="addcontainer(blueprint)"><small>{{ blueprint.title() }}</small></a>
+					          </li>
+					        </ul>
+					    	</span>
+					    </div>
+					    <small class="pull-right" ng-show="clipboard_container.count()>0">
+					    	{{ clipboard_container.count() }} in clipboard
+					    </small>
+					   </div>
+
+					   <hr style="margin:10px;" />
+
+					   <!--
+					   	ICON LOOP
+					    -->
+					   <div class="row-fluid">
+
+							<div class="span12">
+								<digger-radio for="results">
+									<div 
+										ng-repeat="child in results.children().containers()" 
+										class="digger-viewer-square noselection" 
+										ng-class="{selected:selectionbools[child.diggerid()]}" 
+										ng-click="press_container(child);" 
+										ng-dblclick="open_container(child);">
+
+							  			<i class="digger-icon {{treeicon(child)}}" style="font-size:3em;"></i><br />
+							  			<small><strong>{{ child.title() }}</strong><br />{{ child.tag() }}</small>
+
+							  	</div>
+							  </digger-radio>
+
+							</div>
+						</div>
+			    </div>
+
+
+		
+			  	<!--
+			  		FORM TABS
+			  	 -->
+			  	<div ng-class="{span8:showaddbutton && !readonly,span11:!showaddbutton || readonly}" ng-show="editmode">
+
+			  		<div>
+	            <ul id="myTab" class="nav nav-tabs">
+	              <li class="active"><a id="editdefaulttab" ng-click="showaddbutton=true" href="#attr" data-toggle="tab">Attributes</a></li>
+	              <li><a href="#digger" ng-click="showaddbutton=true" data-toggle="tab">Digger</a></li>
+	              <li><a href="#icon" ng-click="showaddbutton=false" data-toggle="tab" ng-hide="readonly">Icon</a></li>
+	              <li><a href="#json" ng-click="showaddbutton=false" data-toggle="tab">JSON</a></li>
+	              <li><a href="#xml" ng-click="showaddbutton=false" data-toggle="tab">XML</a></li>
+	            </ul>
+	            <div id="myTabContent" class="tab-content">
+
+	            	<!--
+									FORM
+								 -->
+	              <div class="tab-pane active" id="attr">
+	                <form novalidate class="form form-horizontal" name="containerForm" onSubmit="return false;">
+
+	                	<div class="row-fluid">
+	                		<div class="span12">
+
+							          <fieldset>
+
+
+							            <div class="well">
+							              
+							                <digger-form fields="editfields" container="editing_container" showedit="formeditmode" />
+
+							            </div>
+
+							            
+							          </fieldset>
+							        </div>
+
+							       
+							      </div>
+
+				        	</form>
+	              </div>
+
+	              <!--
+							  	DIGGER
+							   -->
+	              <div class="tab-pane" id="digger">
+	                <form novalidate class="form form-horizontal" name="diggerForm" onSubmit="return false;">
+
+					          <fieldset>
+
+
+					            <div class="well">
+					              
+					                <digger-form fields="diggerfields" container="editing_container">
+
+					                <div class="control-group">
+
+													  <label style="width:100px;" class="control-label" for="diggerid">Digger ID</label>
+													  <div class="controls" style="margin-left:120px;padding-top:5px;">
+													  	<small>{{ editing_container.diggerid() }}</small>
+													    
+													  </div>
+													</div>
+					                	
+					              	</digger-form>
+
+					            </div>
+					            
+					          </fieldset>
+
+				        	</form>
+	              </div>
+
+	              <div class="tab-pane" id="icon" ng-hide="readonly">
+	              
+	              	<icon-editor container="editing_container" />
+	              	
+	              </div>
+
+	              <div class="tab-pane" id="json" style="max-height:400px;overflow-y:auto;">
+	              	<pre pretty-print class="lang-json" code="{{ get_json() }}" ng-bind="code"></pre>
+	              	
+	              </div>
+
+	              <div class="tab-pane" id="xml" style="max-height:400px;overflow-y:auto;">
+	              	
+	              	<pre pretty-print class="lang-xml" code="{{ get_xml() }}" ng-bind="code"></pre>
+
+	              	
+	              </div>
+	            </div>
+
+
+					            <button class="btn" ng-click="cancelform()">Cancel</button>
+					            <button class="btn btn-success" ng-click="submitform()" ng-hide="readonly">Save {{ editing_container.title() }}</button>
+	          </div>
+
+					</div>
+
+
+
+					<!--
+						        	
+
+
+
+        	ADD FIELD
+
+
+
+	         -->
+	        <div class="span3" ng-hide="!editmode || !showaddbutton || editing_container.data('readonly')">
+	        	<div class="row-fluid">
+							<div class="span12">
+					    	<span class="btn-group btn-dropdown-menu">
+					        <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+					          add field
+					          <span class="caret"></span>
+					        </a>
+					          <!--
+					          this means a sub-menu
+					         -->
+					        <ul class="dropdown-menu" digger selector="blueprint:sort(name)" assign="blueprints">
+					        	<li ng-repeat="type in fieldtypes.list">
+					        		<a href="#" ng-click="addfield(type)"><small>{{ type }}</small></a>
+					        	</li>
+					        </ul>
+					    	</span>
+					    	<a class="btn btn-mini" href="#" ng-click="savingblueprint=true" ng-hide="editing_container.is('blueprint')">
+				          create blueprint
+				        </a>
+					    </div>
+					   </div>
+					   <div class="row-fluid" ng-show="savingblueprint">
+					   	<div class="span12">
+					   		<small>{{ editing_container.summary({title:false}) }}</small><br />
+					   		<div class="well littlewell">
+
+					   			<div>
+							   		
+							   		<small>name:</small><br />
+							   		<input class="littleinput" style="width:90%;" type="text" class="input input-small" ng-model="blueprint_name" />
+							   	</div>
+							  </div>
+
+
+						   	<br />
+					   		<a class="btn btn-mini" href="#" ng-click="canceladdfield()">
+					        cancel
+					      </a>
+					   		<a class="btn btn-mini btn-info" href="#" ng-click="apply_saveblueprint()">
+					        create
+					      </a>
+							</div>
+						 </div>
+
+						 <div class="row-fluid" ng-show="deletingfield">
+						 	<div class="span12">
+						 		<div class="well littlewell" style="margin-top:10px;">
+									<strong><small>
+									Are you sure?<br />
+									</small></strong>
+									<button class="selected-btn btn btn-mini" ng-click="deletingfield=false">cancel</button>
+									<button class="selected-btn btn btn-danger btn-mini" ng-click="doconfirmdeletefield()">yes - do it!</button>
+								</div>
+							</div>
+						 </div>
+
+					   <div class="row-fluid" ng-show="addingfield">
+					   	<div class="span12">
+					   		<small><strong>{{ newfield_properties.type }} field</strong></small><br />
+					   		<div class="well littlewell">
+
+					   			<div>
+							   		
+							   		<small>fieldname:</small><br />
+							   		<input class="littleinput" style="width:90%;" type="text" class="input input-small" ng-model="newfield.name" />
+							   	</div>
+							  </div>
+
+							 <div ng-show="newfield_properties.options">
+							 	<small><strong>manual options:</strong></small><br />
+					   		<div class="well littlewell">
+					   			<small>csv:</small><br />
+					   			<input class="littleinput" style="width:90%;" type="text" class="input input-small" ng-model="newfield.options_csv" />
+					   		</div>
+					   	 </div>
+
+					   	 <div ng-show="newfield_properties.options">
+							 	<small><strong>$digger options:</strong></small><br />
+					   		<div class="well littlewell">
+					   			<small>warehouse:</small><br />
+					   			<input class="littleinput" style="width:90%;" type="text" class="input input-small" ng-model="newfield.options_warehouse" />
+					   			<small>selector:</small><br />
+					   			<input class="littleinput" style="width:90%;" type="text" class="input input-small" ng-model="newfield.options_selector" />
+					   		</div>
+					   	 </div>
+
+						   	<br />
+					   		<a class="btn btn-mini" href="#" ng-click="canceladdfield()">
+					        cancel
+					      </a>
+					   		<a class="btn btn-mini btn-info" href="#" ng-click="applyaddfield()">
+					        <span ng-show="editfieldmode">save</span>
+					        <span ng-hide="editfieldmode">add</span>
+					      </a>
+					   	</div>
+					  </div>
+	        </div>
+
+
+
+
+			  </div>
+
+			</div>
+			
+		</div>
+	</div>
+
+</div>
+
+
+										
