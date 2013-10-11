@@ -1,26 +1,13 @@
-TESTS = test/*.js
-REPORTER = spec
-#REPORTER = dot
+build: components
+	@component build --dev
 
-check: test
+components: component.json
+	@component install --dev
 
-test:
-	@NODE_ENV=test ./node_modules/.bin/mocha \
-		--reporter $(REPORTER) \
-		--timeout 300 \
-		--require should \
-		--growl \
-		$(TESTS)
+templates:
+	@component convert template.html
 
-browserify:
-	browserify src/index.js > build/container.js
+clean:
+	rm -fr build components
 
-uglify: browserify
-	uglifyjs build/container.js > build/container.min.js
-
-build: uglify
-
-install:
-	npm install
-
-.PHONY: test
+.PHONY: clean

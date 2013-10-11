@@ -1,0 +1,19 @@
+{
+  "name": "digger-folders",
+  "description": "folder viewer for digger.io",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ],
+  "styles": [
+    
+  ],
+  "dependencies": {
+    "binocarlos/digger-tree-for-angular": "*",
+    "binocarlos/digger-viewer-for-angular": "*",
+    "binocarlos/digger-utils-for-angular": "*"
+
+  },
+  "remotes": []
+}

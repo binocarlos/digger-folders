@@ -1,0 +1,13 @@
+<div class="row" digger-radio for="root">
+    <!--
+        the - it might work better without a tree test
+     -->
+     
+    <div class="col-sm-4" style="border-right:1px solid #ccc;">
+        <digger-tree title="{{ title }}" filter="folder" iconfn="iconfn" container="root" depth="10"></digger-tree>
+    </div>
+    
+    <div class="col-sm-8">
+        <digger-viewer iconfn="iconfn" container="open_container" blueprint="open_blueprint" settings="settings" />
+    </div>
+</div>
