@@ -1,1 +1,0 @@
-module.exports = '<div>\n<div ng-transclude></div>\n <abn-tree tree-data="treedata" on-select="container_select(branch)" expand-level="depth"></abn-tree>\n</div>';
