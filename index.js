@@ -1,4 +1,3 @@
-require('digger-for-angular');
 var template = require('./template');
 
 function growl(message){
@@ -16,10 +15,12 @@ function growl(message){
 
 angular
 	.module('digger.folders', [
-		'digger'
+		'digger.tree',
+    'digger.viewer',
+    'digger.utils'
 	])
 
-  directive('diggerFolders', function($http, $location, $safeApply){
+  .directive('diggerFolders', function($http, $location, $safeApply){
     return {
       restrict:'EA',
       scope:{
